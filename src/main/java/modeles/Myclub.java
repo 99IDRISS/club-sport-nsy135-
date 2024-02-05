@@ -1,0 +1,146 @@
+package modeles;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Calendar;
+import java.util.List;
+
+import org.hibernate.*;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
+import modeles.SABAH.*;
+
+
+public class Myclub{
+
+   /**
+    * Objet Session de Hibernate
+    */
+   private Session session;
+
+   /**
+    * Constructeur établissant une connexion avec Hibernate
+    */
+   public Myclub()  {
+     Configuration configuration = new Configuration().configure("/hibernate.cfg.xml");
+     
+     // ICI ON AJOUTE LES CLASSES JPA
+       configuration.addAnnotatedClass(Joueur.class);
+       configuration.addAnnotatedClass(Reservation.class);
+       configuration.addAnnotatedClass(Club.class);
+       configuration.addAnnotatedClass(Installation.class);
+       configuration.addAnnotatedClass(Abonnement.class);
+       configuration.addAnnotatedClass(Forfait.class);
+       configuration.addAnnotatedClass(Tennis.class);
+       configuration.addAnnotatedClass(Squash.class);
+       configuration.addAnnotatedClass(Ticket.class);
+       configuration.addAnnotatedClass(Badminton.class);
+     // FIN DE L'AJOUT DES CLASSES JPA
+     try {
+    	 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+         SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+         session = sessionFactory.openSession();
+     } catch (Exception e) {
+		// TODO: handle exception
+		e.printStackTrace();
+	  }
+    
+   }
+   public  Joueur findJoueurById(Integer id) {
+//	   Joueur joueur;
+//	   joueur = session.get(Joueur.class, joueurId);
+	return (Joueur) session.load(Joueur.class, id);
+   }
+   
+   public Installation findInstallationById(Integer installationId) {
+	    Installation installation = null;
+	    installation = session.get(Installation.class, installationId);
+	    return installation;
+   }
+   
+   public List<Joueur> afficherLesJoueurs(){
+	   Query q = session.createQuery("from Joueur");
+	   return q.list();
+   }
+   
+   public List<Installation> afficherEtatInstallation() {
+	   Query q = session.createQuery("from Installation");
+	   return q.list();
+   }
+   
+   public List<Object[]> getJoueurAbonnement(){
+	   Query q = session.createQuery("SELECT j.nom, j.prenom, a.typeAbonnement FROM Joueur j LEFT JOIN j.abonnement a ");
+	   return q.list();
+	   
+   }
+   
+   public List<Object[]> getReservations() {
+	   Query q = session.createQuery("SELECT j.nom, j.prenom, r.dateHeure, r.duree, i.typeInstallation "
+	   		+ "FROM Joueur j INNER JOIN j.reservations r JOIN r.installation i");
+	   return q.list();
+   }
+   
+   public void saveReservation(Reservation reservation) {
+	    // Open a new session and start a transaction
+	    Transaction transaction = null;
+	    try  {
+	        transaction = session.beginTransaction();
+	        // Save the reservation object
+	        session.save(reservation);
+	        transaction.commit();
+	    } catch (Exception e) {
+	        if (transaction != null) {
+	            transaction.rollback();
+	        }
+	        e.printStackTrace();
+	    }
+   }
+
+   public BigDecimal calculerTotalpayeMoisPrec(Integer joueurId) {
+		
+		BigDecimal totalpaye = BigDecimal.ZERO;
+		Joueur joueur = findJoueurById(joueurId);
+		
+		//check subscription 
+		if (joueur.getAbonnement() != null) {
+			//if player is on a forfait subscription
+			if (joueur.getAbonnement() instanceof Forfait) {
+				Forfait forfait = (Forfait) joueur.getAbonnement();
+				// add 1/12th of the annual fee
+				BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
+				totalpaye = totalpaye.add(prixAnnuel.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP));
+			}
+			//calculate the cost of reservation the last month
+			for (Reservation reservation : joueur.getReservations()) {
+				//check if the reservation in previous month
+				if (isReservationInPreviousMonth(reservation)) {
+					BigDecimal prixParHeure = (joueur.getAbonnement()instanceof Forfait)
+							? ((Forfait) joueur.getAbonnement()).getPrixParHeure()
+							: ((Ticket) joueur.getAbonnement()).getPrixParHeure();
+				
+					//add  the cost to total
+					totalpaye= totalpaye.add(prixParHeure.multiply(new BigDecimal(reservation.getDuree())));
+				}
+			}
+		}
+		return totalpaye; 
+	}
+	
+	private boolean isReservationInPreviousMonth(Reservation reservation) {
+		Calendar reservationDate= Calendar.getInstance();
+		reservationDate.setTime(reservation.getDateHeure());
+		
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.MONTH, -1);   // Move to the previousMonth
+		
+		//check if the reservation year and month match now
+		
+		return (reservationDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)) && 
+				(reservationDate.get(Calendar.MONTH) == now.get(Calendar.MONTH));
+		
+	}
+
+  
+}

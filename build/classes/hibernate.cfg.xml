@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "hibernate-configuration-3.0.dtd">
+
+
+
+<hibernate-configuration>
+      <session-factory>
+            <!-- local connection properties -->
+            <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/SABAH</property>
+            <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="hibernate.connection.username">idriss</property>
+            <property name="hibernate.connection.password">Strong123!</property>
+            <property name="hibernate.connection.pool_size">10</property>
+            <property name="hibernate.connection.provider_disables_autocommit">false</property>
+            
+
+            <!-- dialect for MySQL -->
+            <property name="dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+
+            <property name="hibernate.show_sql">true</property>
+            <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+            <property name="cache.use_query_cache">false</property>
+            
+            <mapping class="modeles.SABAH.Installation"/>
+            <mapping class="modeles.SABAH.Club"/>
+            <mapping class="modeles.SABAH.Joueur"/>
+            <mapping class="modeles.SABAH.Reservation"/>
+            <mapping class="modeles.SABAH.Abonnement"/>
+            <mapping class="modeles.SABAH.Tennis"/>
+            <mapping class="modeles.SABAH.Squash"/>
+            <mapping class="modeles.SABAH.Badminton"/>
+            <mapping class="modeles.SABAH.Ticket"/>
+            <mapping class="modeles.SABAH.Forfait"/>
+	    	
+	    	
+      </session-factory>
+</hibernate-configuration>
