@@ -50,7 +50,7 @@ public class Hibernate extends HttpServlet {
             		maVue = VUES + "connexion.jsp";
             	}else if (action.equals("listerjoueurs")) {
             		club = new Myclub();
-            		List<Joueur> joueurs = club.afficherLesJoueurs();
+            		List<Joueur> joueurs = club.getListJoueurs();
             		request.setAttribute("joueurs", joueurs);
             		maVue = VUES + "joueurslist.jsp";
             	}else if (action.equals("etatInstallation")){
@@ -122,7 +122,13 @@ public class Hibernate extends HttpServlet {
             Joueur joueur = club.findJoueurById(joueurId);
             request.setAttribute("joueurNom", joueur.getNom() + " " + joueur.getPrenom());
             maVue = VUES + "paymentResult.jsp"; 
-        } 
+        } else if (action.equals("totalChiffreAffaire")) {
+        	Myclub club = new Myclub();
+        	BigDecimal chiffreAffaire = club.totalChiffreAffaire();
+        	request.setAttribute("chiffreAffaire", chiffreAffaire);
+        	maVue = VUES + "chiffreAffaireResult.jsp"; 
+        	
+        }
         RequestDispatcher dispatcher = getServletContext()
                 .getRequestDispatcher(maVue);
         dispatcher.forward(request, response);

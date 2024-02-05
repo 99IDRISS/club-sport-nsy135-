@@ -60,7 +60,7 @@ public class Myclub{
 	    return installation;
    }
    
-   public List<Joueur> afficherLesJoueurs(){
+   public List<Joueur> getListJoueurs(){
 	   Query q = session.createQuery("from Joueur");
 	   return q.list();
    }
@@ -80,6 +80,12 @@ public class Myclub{
 	   Query q = session.createQuery("SELECT j.nom, j.prenom, r.dateHeure, r.duree, i.typeInstallation "
 	   		+ "FROM Joueur j INNER JOIN j.reservations r JOIN r.installation i");
 	   return q.list();
+   }
+   
+   public List<Reservation> getAllReservations() {
+	Query q = session.createQuery("from Reservation");
+	return q.list();
+			
    }
    
    public void saveReservation(Reservation reservation) {
@@ -127,6 +133,35 @@ public class Myclub{
 		}
 		return totalpaye; 
 	}
+   //une méthode qui indique le chiffre d’affaire du mois dernier
+   public BigDecimal totalChiffreAffaire() {
+	   BigDecimal chiffreAffaire = BigDecimal.ZERO;
+	 
+	   List<Reservation> allReservations = getAllReservations() ;
+	   
+	   for (Reservation reservation :allReservations) {
+		   if (isReservationInPreviousMonth(reservation)) {
+			   Joueur joueur = reservation.getJoueur();
+			   BigDecimal prixParHeure;
+			   
+			   //check type abonnement
+			   if (joueur.getAbonnement() instanceof Forfait) {
+				   prixParHeure= ((Forfait) joueur.getAbonnement()).getPrixParHeure();
+			   }else if (joueur.getAbonnement() instanceof Ticket) {
+				prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
+			   }else { 
+				continue;
+			   }
+			   
+			   BigDecimal cost = prixParHeure.multiply(new BigDecimal(reservation.getDuree()));
+			   chiffreAffaire = chiffreAffaire.add(cost);
+		   }
+		   
+	   }
+	   
+	   return chiffreAffaire;
+   }
+   
 	
 	private boolean isReservationInPreviousMonth(Reservation reservation) {
 		Calendar reservationDate= Calendar.getInstance();
