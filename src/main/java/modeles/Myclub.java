@@ -61,7 +61,7 @@ public class Myclub{
    }
    
    public List<Joueur> getListJoueurs(){
-	   Query q = session.createQuery("from Joueur");
+	   Query q = session.createQuery("from Joueur j JOIN FETCH j.abonnement");
 	   return q.list();
    }
    
