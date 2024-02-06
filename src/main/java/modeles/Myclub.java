@@ -83,7 +83,7 @@ public class Myclub{
    }
    
    public List<Reservation> getAllReservations() {
-	Query q = session.createQuery("from Reservation");
+	Query q = session.createQuery("SELECT r FROM Reservation r JOIN FETCH r.joueur JOIN FETCH r.installation");
 	return q.list();
 			
    }

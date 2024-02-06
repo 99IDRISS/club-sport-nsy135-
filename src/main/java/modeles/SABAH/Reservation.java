@@ -14,13 +14,13 @@ public class Reservation {
 	public void setId(Integer i ) {this.id = i;}
 	public Integer getId() {return id;}
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "joueur_id")
 	private Joueur joueur;
 	public void setJoueur(Joueur j) {joueur = j ;}
 	public Joueur getJoueur() {return joueur;}
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "installation_id")
 	private Installation installation;
 	public void setInstallation(Installation i) {installation = i ;}
