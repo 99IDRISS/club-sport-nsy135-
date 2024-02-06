@@ -6,27 +6,30 @@ pageEncoding="UTF-8" %>
      <html>
      <head>
      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-     <title>Menu HIBERNATE</title>
+     <title>My Club</title>
    	 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vues/hibernate/style.css" />
    	 
      </head>
      <body>
-
-       <h1>Gerer Mon Club</h1>
-
-       <ul>
-             <li><a
-                     href="${pageContext.request.contextPath}/hibernate?action=listerjoueurs">Liste des Joueurs</a>
-             <li><a
-                     href="${pageContext.request.contextPath}/hibernate?action=etatInstallation">Etat des installations</a>
-             <li><a
-                     href="${pageContext.request.contextPath}/hibernate?action=abonnements">Etat des abonnements</a> 
-             <li><a
-                     href="${pageContext.request.contextPath}/hibernate?action=reservations">Les Réservations</a>   
-             
-             </li>
-       </ul>
-       
+     
+     	<header>
+     	
+       			<h1>Gérer Mon Club</h1>
+				<nav>
+       				<ul>
+			             <li><a
+			                     href="${pageContext.request.contextPath}/hibernate?action=listerjoueurs">Liste des Joueurs</a>
+			             <li><a
+			                     href="${pageContext.request.contextPath}/hibernate?action=etatInstallation">Etat des installations</a>
+			             <li><a
+			                     href="${pageContext.request.contextPath}/hibernate?action=abonnements">Etat des abonnements</a> 
+			             <li><a
+			                     href="${pageContext.request.contextPath}/hibernate?action=reservations">Les Réservations</a>   
+			             
+			             </li>
+       				</ul>
+       			</nav>
+     </header>
        	<form action="${pageContext.request.contextPath}/hibernate?action=createReservation" method="post">
     		<h3>Effectuer une Réservation</h3>
     

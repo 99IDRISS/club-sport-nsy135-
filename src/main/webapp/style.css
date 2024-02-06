@@ -11,17 +11,6 @@ header {
     padding: 1em 0;
 }
 
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
 nav a {
     text-decoration: none;
     color: yellow;
