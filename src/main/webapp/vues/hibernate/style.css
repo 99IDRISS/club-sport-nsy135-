@@ -1,17 +1,22 @@
-header {
-    text-align: center;
-    padding: 1em 0;
-}
-h1 {
-    margin-bottom: 0; 
-}
 header img {
     height: 100px;
-    display: block; 
+    display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1em; 
+    margin-bottom: 0; /* Réduire ou supprimer la marge du bas */
 }
+
+h1 {
+    margin-top: 0; /* Supprimer ou réduire la marge du haut */
+    text-align: center;
+}
+
+header {
+    padding-top: 0;
+    padding-bottom: 0;
+    text-align: center;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4; /* Light grey background */
