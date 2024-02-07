@@ -1,14 +1,20 @@
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('tennis.jpg');
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+  background-position: center center; 
 }
+
 
 header {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 1em 0;
+    padding: 2em 0;
 }
 
 nav a {
@@ -22,10 +28,11 @@ main {
 
 section {
     margin-bottom: 30px;
+    color: white;
 }
 
 footer {
-    background-color: #333;
+    
     color: green;
     text-align: center;
     padding: 1em 0;
@@ -33,3 +40,11 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+header, footer {
+  background-color: rgba(40, 40, 40, 0.3); /* Adjust the opacity as needed */
+  color: white;
+  text-align: center;
+  padding: 2em 0;
+}
+

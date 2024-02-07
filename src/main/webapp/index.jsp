@@ -9,7 +9,7 @@
 <body>
 
     <header>
-        <h1>Welcome to Club Sport Manager</h1>
+        <h2>Welcome to Club Sport Manager</h2>
        <nav>
     	<ul>
              <li><a href="${pageContext.request.contextPath}/vues/hibernate/index.jsp">Club Management</a></li>

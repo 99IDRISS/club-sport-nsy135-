@@ -11,10 +11,13 @@ pageEncoding="UTF-8" %>
    	 
      </head>
      <body>
-     
-     	<header>
      	
-       			<h1>Gérer Mon Club</h1>
+     	<header>
+     			
+       			<div class="logo-header">
+        			<img src="logo.png" alt="Logo" style="height: 100px;">
+        			<h1>Gérer Mon Club</h1>
+   			    </div>
 				<nav>
        				<ul>
 			             <li><a
