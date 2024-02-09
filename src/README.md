@@ -22,8 +22,7 @@ L'application vise à appliquer les principes fondamentaux du framework de mappi
 
 ## Installation
 
-1. Clonez le dépôt sur votre machine locale :
-- git clone https://github.com/99IDRISS/club-sport-nsy135-.git
+1. Clonez le dépôt sur votre machine locale : git clone https://github.com/99IDRISS/club-sport-nsy135-.git
 2. Importez le projet dans votre IDE (par exemple Eclipse).
 3. Configurez votre serveur Tomcat et la base de données MySQL.
 4. Exécutez l'application via votre IDE ou déployez le fichier WAR sur votre serveur Tomcat.

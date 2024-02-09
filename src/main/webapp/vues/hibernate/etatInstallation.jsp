@@ -6,13 +6,14 @@
 <meta charset="UTF-8">
 <title>Mes installations</title>
 <style>
-table, th, td {
-  border: 1px solid black;
+table {
+  width: 100%;
   border-collapse: collapse;
 }
 th, td {
-  padding: 10px;
+  padding: 8px;
   text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 </style>
 </head>
@@ -21,21 +22,24 @@ th, td {
 
 	<table>
   		<tr>
+  			<th>installation Id</th>
     		<th>Type</th>
     		<th>Date de mise en service</th>
     		<th>État Général</th>
   		</tr>
   		<c:forEach items="${requestScope.installations}" var="i">
     		<tr>
+    			<td> <c:out value="${i.id }"></c:out></td>
       			<td><c:out value="${i.typeInstallation}" /></td>
       			<td><c:out value="${i.dateMiseEnService}" /></td>
       			<td><c:out value="${i.etatGeneral}" /></td>
     		</tr>
   		</c:forEach>
 	</table>
+	<p>L'évaluation de l'état général se fait sur une échelle de 1 à 5 pour chaque salle, où 1 indique un mauvais état et 5 un bon état.</p>
 
 	<p>
-		<a href="${pageContext.request.contextPath}/hibernate">Accueil</a>
+		<a href="${pageContext.request.contextPath}/hibernate">Retour</a>
 	</p>
 
 </body>

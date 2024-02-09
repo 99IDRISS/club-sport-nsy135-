@@ -31,5 +31,8 @@ th, td {
             </tr>
         </c:forEach>
     </table>
+    	<p>
+       		<a href="${pageContext.request.contextPath}/hibernate">Retour</a>
+		</p>
 </body>
 </html>
