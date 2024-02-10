@@ -2,8 +2,12 @@ package modeles;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -61,11 +65,11 @@ public class Myclub{
    }
    
    public List<Joueur> getListJoueurs(){
-	   Query q = session.createQuery("from Joueur j JOIN FETCH j.abonnement");
+	   Query q = session.createQuery("from Joueur j JOIN FETCH j.abonnement"); // utilisation join fetch pour minimiser les requete SQl
 	   return q.list();
    }
    
-   public List<Installation> afficherEtatInstallation() {
+   public List<Installation> getInstallation() {
 	   Query q = session.createQuery("from Installation");
 	   return q.list();
    }
@@ -168,7 +172,7 @@ public class Myclub{
 		reservationDate.setTime(reservation.getDateHeure());
 		
 		Calendar now = Calendar.getInstance();
-		now.add(Calendar.MONTH, -1);   // Move to the previousMonth
+		now.add(Calendar.MONTH, -1);   // Move to the previousMonth -1
 		
 		//check if the reservation year and month match now
 		
@@ -176,6 +180,38 @@ public class Myclub{
 				(reservationDate.get(Calendar.MONTH) == now.get(Calendar.MONTH));
 		
 	}
-
+	
+	// methode pour parcourir toute les installations, et selon leur type extraire les informations.
+	
+	public List<Map<String, Object>> getDetailInstallations(){
+		// charger les installations
+		List<Installation> installations = getInstallation();
+		List<Map<String, Object>> detailInstallations = new ArrayList<>();
+		
+		for (Installation installation : installations) {
+			Map<String, Object> details = new HashMap<>();
+			details.put("id", installation.getId());
+	        details.put("typeInstallation", installation.getTypeInstallation());
+	        details.put("dateMiseEnService", installation.getDateMiseEnService());
+	        details.put("etatGeneral", installation.getEtatGeneral());
+	        
+	        if (installation instanceof Tennis) {
+	        	Tennis tennis = (Tennis) installation;
+	        	details.put("surface", tennis.getSurface());
+	        }else if (installation instanceof Squash) {
+	        	Squash squash = (Squash) installation;
+	        	details.put("vitre", squash.getVitre());
+	        	details.put("dateRemplacementParquet", squash.getDateRemplacementParquet());
+	        }else if (installation instanceof Badminton){
+	        	Badminton badminton = (Badminton) installation;
+	        	details.put("dateAchatFilets", badminton.getDateAchatFilets());
+	        	details.put("dateAchatPoteaux", badminton.getDateAchatPoteaux());
+	        }
+	        
+	        detailInstallations.add(details);
+		}
+		return detailInstallations;
+		
+	}
   
 }

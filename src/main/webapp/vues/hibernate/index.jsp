@@ -53,5 +53,5 @@
 		<form action="${pageContext.request.contextPath}/hibernate?action=totalChiffreAffaire" method="post">
     		<input type="submit" value="Voir le chiffre d'affaire du dernier mois">
 		</form>
-
      </body>
+     

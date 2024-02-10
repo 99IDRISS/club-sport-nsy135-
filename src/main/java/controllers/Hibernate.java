@@ -55,7 +55,7 @@ public class Hibernate extends HttpServlet {
             		maVue = VUES + "joueurslist.jsp";
             	}else if (action.equals("etatInstallation")){
 					club = new Myclub();
-					List<Installation> installations = club.afficherEtatInstallation();
+					List<Map<String, Object>> installations = club.getDetailInstallations();
 					request.setAttribute("installations", installations);
 					maVue = VUES + "etatInstallation.jsp";
 				}else if (action.equals("abonnements")) {
@@ -70,8 +70,9 @@ public class Hibernate extends HttpServlet {
 					maVue = VUES + "reservations.jsp";
 				}
     			}catch (Exception e) {
+    				request.setAttribute("message", e.getLocalizedMessage());
             		maVue = VUES + "exception.jsp";
-            		request.setAttribute("message", e.getLocalizedMessage());
+            		
     	}
          // On transmet à la vue
             RequestDispatcher dispatcher = getServletContext()
