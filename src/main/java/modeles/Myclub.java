@@ -150,9 +150,12 @@ public class Myclub{
 			   
 			   //check type abonnement
 			   if (joueur.getAbonnement() instanceof Forfait) {
-				   prixParHeure= ((Forfait) joueur.getAbonnement()).getPrixParHeure();
+				   Forfait forfait = (Forfait) joueur.getAbonnement();
+				   BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
+	               prixParHeure = prixAnnuel.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP);
+				    
 			   }else if (joueur.getAbonnement() instanceof Ticket) {
-				prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
+				   prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
 			   }else { 
 				continue;
 			   }
