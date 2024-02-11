@@ -119,7 +119,8 @@ public class Myclub{
 			if (joueur.getAbonnement() instanceof Forfait) {
 				Forfait forfait = (Forfait) joueur.getAbonnement();
 				// add 1/12th of the annual fee
-				BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
+				//BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
+				BigDecimal prixAnnuel = forfait.getPrixAnnuel();
 				totalpaye = totalpaye.add(prixAnnuel.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP));
 			}
 			//calculate the cost of reservation the last month
@@ -138,36 +139,74 @@ public class Myclub{
 		return totalpaye; 
 	}
    //une méthode qui indique le chiffre d’affaire du mois dernier
+//   public BigDecimal totalChiffreAffaire() {
+//	   BigDecimal chiffreAffaire = BigDecimal.ZERO;
+//	 
+//	   List<Reservation> allReservations = getAllReservations() ;
+//	   
+//	   for (Reservation reservation :allReservations) {
+//		   if (isReservationInPreviousMonth(reservation)) {
+//			   Joueur joueur = reservation.getJoueur();
+//			   BigDecimal prixParHeure;
+//			   
+//			   //check type abonnement
+//			   if (joueur.getAbonnement() instanceof Forfait) {
+//				   prixParHeure = ((Forfait) joueur.getAbonnement()).getPrixParHeure();
+//				  
+//			   }else if (joueur.getAbonnement() instanceof Ticket) {
+//				   prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
+//			   }else { 
+//				continue;
+//			   }
+//			   
+//			   BigDecimal cost = prixParHeure.multiply(new BigDecimal(reservation.getDuree()));
+//			   chiffreAffaire = chiffreAffaire.add(cost);
+//		   }
+//		   
+//	   }
+//	   
+//	   return chiffreAffaire;
+//   }
+   
    public BigDecimal totalChiffreAffaire() {
-	   BigDecimal chiffreAffaire = BigDecimal.ZERO;
-	 
-	   List<Reservation> allReservations = getAllReservations() ;
-	   
-	   for (Reservation reservation :allReservations) {
-		   if (isReservationInPreviousMonth(reservation)) {
-			   Joueur joueur = reservation.getJoueur();
-			   BigDecimal prixParHeure;
-			   
-			   //check type abonnement
-			   if (joueur.getAbonnement() instanceof Forfait) {
-				   Forfait forfait = (Forfait) joueur.getAbonnement();
-				   BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
-	               prixParHeure = prixAnnuel.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP);
-				    
-			   }else if (joueur.getAbonnement() instanceof Ticket) {
-				   prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
-			   }else { 
-				continue;
-			   }
-			   
-			   BigDecimal cost = prixParHeure.multiply(new BigDecimal(reservation.getDuree()));
-			   chiffreAffaire = chiffreAffaire.add(cost);
-		   }
-		   
-	   }
-	   
-	   return chiffreAffaire;
-   }
+	    BigDecimal chiffreAffaire = BigDecimal.ZERO;
+
+	    // Map pour stocker le coût mensuel par joueur
+	    Map<Integer, BigDecimal> prixMensuelParJoueur = new HashMap<>();
+
+	    List<Reservation> allReservations = getAllReservations();
+
+	    for (Reservation reservation : allReservations) {
+	        if (isReservationInPreviousMonth(reservation)) {
+	            Joueur joueur = reservation.getJoueur();
+	            BigDecimal prixParHeure;
+
+	            // Vérifier le type d'abonnement
+	            if (joueur.getAbonnement() instanceof Forfait) {
+	                prixParHeure = ((Forfait) joueur.getAbonnement()).getPrixParHeure();
+
+	                // Ajouter le coût mensuel pour les abonnements forfaitaires
+	                if (!prixMensuelParJoueur.containsKey(joueur.getId())) {
+	                    BigDecimal prixMensuelForfait = ((Forfait) joueur.getAbonnement()).getPrixAnnuel().divide(new BigDecimal(12), 2, RoundingMode.HALF_UP);
+	                    prixMensuelParJoueur.put(joueur.getId(), prixMensuelForfait);
+	                }
+	            } else if (joueur.getAbonnement() instanceof Ticket) {
+	                prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
+	            } else {
+	                continue;
+	            }
+
+	            BigDecimal cost = prixParHeure.multiply(new BigDecimal(reservation.getDuree()));
+	            chiffreAffaire = chiffreAffaire.add(cost);
+	        }
+	    }
+
+	    // Ajouter le coût mensuel par joueur à la somme du chiffre d'affaires
+	    chiffreAffaire = chiffreAffaire.add(prixMensuelParJoueur.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add));
+
+	    return chiffreAffaire;
+	}
+
    
 	
 	private boolean isReservationInPreviousMonth(Reservation reservation) {

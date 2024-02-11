@@ -9,11 +9,11 @@ import javax.persistence.*;
 public class Forfait extends Abonnement{
 	
 	@Column(name = "prix_annuel")
-	private Float prixAnnuel;
-	public void setPrixAnnuel(Float pa) {
+	private BigDecimal prixAnnuel;
+	public void setPrixAnnuel(BigDecimal pa) {
 		this.prixAnnuel = pa;
 	}
-	public Float getPrixAnnuel() {
+	public BigDecimal getPrixAnnuel() {
 		return prixAnnuel;
 	}
 	
