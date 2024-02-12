@@ -6,19 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>les joueurs du club</title>
-<style>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th, td {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-</style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/vues/hibernate/jspsStyle.css">
 </head>
 <body>
+<div class="container">
 	<h1>les Joueurs du club sont :</h1>
 	
 	<table>
@@ -40,6 +31,6 @@ th, td {
 		<p>
        		<a href="${pageContext.request.contextPath}/hibernate">Retour</a>
 		</p>
-
+</div>
 </body>
 </html>

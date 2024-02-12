@@ -81,7 +81,7 @@ public class Myclub{
    }
    
    public List<Object[]> getReservations() {
-	   Query q = session.createQuery("SELECT j.nom, j.prenom, r.dateHeure, r.duree, i.typeInstallation "
+	   Query q = session.createQuery("SELECT j.nom, j.prenom, r.dateHeure, r.duree, i.typeInstallation, i.id "
 	   		+ "FROM Joueur j INNER JOIN j.reservations r JOIN r.installation i");
 	   return q.list();
    }
@@ -92,20 +92,33 @@ public class Myclub{
 			
    }
    
-   public void saveReservation(Reservation reservation) {
+   public boolean saveReservation(Reservation reservation) {
 	    // Open a new session and start a transaction
 	    Transaction transaction = null;
 	    try  {
 	        transaction = session.beginTransaction();
+	        
+	        //check if the reservation already exist for the given installation
+	        Reservation existingReservation = (Reservation) session.createQuery("FROM Reservation WHERE installation = :installation AND dateHeure = :dateHeure", Reservation.class)
+	        														.setParameter("installation", reservation.getInstallation())
+	        														.setParameter("dateHeure", reservation.getDateHeure())
+	        														.uniqueResult();
+	        if (existingReservation != null) {
+	        	// if a reservation already exist for the same installation and dateheure
+	        	//throw new Exception("L'installation est déja réservée à ce momment-là. Veuillez choisir une autre heure.");
+	        	return false;
+	        }
 	        // Save the reservation object
 	        session.save(reservation);
 	        transaction.commit();
+	       
 	    } catch (Exception e) {
 	        if (transaction != null) {
 	            transaction.rollback();
 	        }
 	        e.printStackTrace();
 	    }
+	    return true;
    }
 
    public BigDecimal calculerTotalpayeMoisPrec(Integer joueurId) {

@@ -28,8 +28,8 @@ import modeles.SABAH.Reservation;
  */
 @WebServlet("/hibernate")
 public class Hibernate extends HttpServlet {
-	private static final String SERVER="localhost", BD="SABAH",
-            LOGIN="idriss", PASSWORD="Strong123!", VUES="/vues/hibernate/";
+		private static final String SERVER="localhost", BD="SABAH",
+	            LOGIN="idriss", PASSWORD="Strong123!", VUES="/vues/hibernate/";
 	
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -105,15 +105,21 @@ public class Hibernate extends HttpServlet {
                 reservation.setDuree(duree);
 
                 // Save the reservation
-                club.saveReservation(reservation);
+                if (!club.saveReservation(reservation)) {
+                	 request.setAttribute("errorMessage", "Une erreur s'est produite lors de la réservation.");
+         	         maVue = VUES + "erreurReservation.jsp";
+                	
+                }else {
+                	  // Set confirmation message
+                    request.setAttribute("confirmationMessage", "Votre réservation a été enregistrée !");
+                    maVue = VUES + "reservationConfirmation.jsp";
+                	
+                }
                 
-                // Set confirmation message
-                request.setAttribute("confirmationMessage", "Votre réservation a été enregistrée !");
-                maVue = VUES + "reservationConfirmation.jsp";
             } catch (Exception e) {
-                e.printStackTrace();
-                
-            }
+            	e.printStackTrace();
+            	}
+            
             
         }else if (action.equals("calculatePayment")) {
             Integer joueurId = Integer.parseInt(request.getParameter("joueurId"));
