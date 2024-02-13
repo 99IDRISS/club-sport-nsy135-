@@ -17,12 +17,32 @@ public class Forfait extends Abonnement{
 		return prixAnnuel;
 	}
 	
-	@Column(name = "prix_par_heure")
-    private BigDecimal prixParHeure ;
-	public void setPrixParHeure(BigDecimal ph) {
-		this.prixParHeure = ph;
-	}
-	public BigDecimal getPrixParHeure() {
+//	@Column(name = "prix_par_heure")
+//    private BigDecimal prixParHeure ;
+//	public void setPrixParHeure(BigDecimal ph) {
+//		this.prixParHeure = ph;
+//	}
+//	public BigDecimal getPrixParHeure() {
+//		return prixParHeure;
+//	}
+//	
+	public BigDecimal getPrixParHeure(InstallationType type) {
+		BigDecimal prixParHeure;
+		switch (type) {
+			case Tennis:
+				prixParHeure = new BigDecimal("11");
+				break;
+			case Squash:
+				prixParHeure = new BigDecimal("9");
+				break;
+			case Badminton:
+				prixParHeure = new BigDecimal("10");
+				break;
+		default:
+			prixParHeure = BigDecimal.ZERO;
+			break;
+		}
 		return prixParHeure;
 	}
+	
 }

@@ -70,7 +70,7 @@ public class Myclub{
    }
    
    public List<Installation> getInstallation() {
-	   Query q = session.createQuery("from Installation");
+	   Query q = session.createQuery("from Installation i JOIN FETCH i.club");
 	   return q.list();
    }
    
@@ -135,52 +135,33 @@ public class Myclub{
 				//BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
 				BigDecimal prixAnnuel = forfait.getPrixAnnuel();
 				totalpaye = totalpaye.add(prixAnnuel.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP));
-			}
 			//calculate the cost of reservation the last month
-			for (Reservation reservation : joueur.getReservations()) {
-				//check if the reservation in previous month
-				if (isReservationInPreviousMonth(reservation)) {
-					BigDecimal prixParHeure = (joueur.getAbonnement()instanceof Forfait)
-							? ((Forfait) joueur.getAbonnement()).getPrixParHeure()
-							: ((Ticket) joueur.getAbonnement()).getPrixParHeure();
-				
-					//add  the cost to total
-					totalpaye= totalpaye.add(prixParHeure.multiply(new BigDecimal(reservation.getDuree())));
+				for (Reservation reservation : joueur.getReservations()) {
+					//check if the reservation in previous month
+					if (isReservationInPreviousMonth(reservation)) {
+						InstallationType type = InstallationType.valueOf(reservation.getInstallation().getTypeInstallation());
+						BigDecimal prixParHeure = forfait.getPrixParHeure(type);
+						totalpaye= totalpaye.add(prixParHeure.multiply(new BigDecimal(reservation.getDuree())));
+					}
 				}
+				
+			}else if (joueur.getAbonnement() instanceof Ticket){
+				Ticket ticket = (Ticket) joueur.getAbonnement();
+				for (Reservation reservation : joueur.getReservations()) {
+	                // Vérifier si la réservation est du mois précédent
+	                if (isReservationInPreviousMonth(reservation)) {
+	                    InstallationType type = InstallationType.valueOf(reservation.getInstallation().getTypeInstallation());
+	                    BigDecimal prixParHeure = ticket.getPrixParHeure(type);
+	                    totalpaye = totalpaye.add(prixParHeure.multiply(new BigDecimal(reservation.getDuree())));
+	                }
+	            }
+				
 			}
 		}
 		return totalpaye; 
 	}
-   //une méthode qui indique le chiffre d’affaire du mois dernier
-//   public BigDecimal totalChiffreAffaire() {
-//	   BigDecimal chiffreAffaire = BigDecimal.ZERO;
-//	 
-//	   List<Reservation> allReservations = getAllReservations() ;
-//	   
-//	   for (Reservation reservation :allReservations) {
-//		   if (isReservationInPreviousMonth(reservation)) {
-//			   Joueur joueur = reservation.getJoueur();
-//			   BigDecimal prixParHeure;
-//			   
-//			   //check type abonnement
-//			   if (joueur.getAbonnement() instanceof Forfait) {
-//				   prixParHeure = ((Forfait) joueur.getAbonnement()).getPrixParHeure();
-//				  
-//			   }else if (joueur.getAbonnement() instanceof Ticket) {
-//				   prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
-//			   }else { 
-//				continue;
-//			   }
-//			   
-//			   BigDecimal cost = prixParHeure.multiply(new BigDecimal(reservation.getDuree()));
-//			   chiffreAffaire = chiffreAffaire.add(cost);
-//		   }
-//		   
-//	   }
-//	   
-//	   return chiffreAffaire;
-//   }
    
+   //une méthode qui indique le chiffre d’affaire du mois dernier   
    public BigDecimal totalChiffreAffaire() {
 	    BigDecimal chiffreAffaire = BigDecimal.ZERO;
 
@@ -196,7 +177,9 @@ public class Myclub{
 
 	            // Vérifier le type d'abonnement
 	            if (joueur.getAbonnement() instanceof Forfait) {
-	                prixParHeure = ((Forfait) joueur.getAbonnement()).getPrixParHeure();
+	            	Forfait forfait = (Forfait) joueur.getAbonnement();
+	                InstallationType type = InstallationType.valueOf(reservation.getInstallation().getTypeInstallation());
+	                prixParHeure = forfait.getPrixParHeure(type);
 
 	                // Ajouter le coût mensuel pour les abonnements forfaitaires
 	                if (!prixMensuelParJoueur.containsKey(joueur.getId())) {
@@ -204,7 +187,9 @@ public class Myclub{
 	                    prixMensuelParJoueur.put(joueur.getId(), prixMensuelForfait);
 	                }
 	            } else if (joueur.getAbonnement() instanceof Ticket) {
-	                prixParHeure = ((Ticket) joueur.getAbonnement()).getPrixParHeure();
+	            	Ticket ticket = (Ticket) joueur.getAbonnement();
+	                InstallationType type = InstallationType.valueOf(reservation.getInstallation().getTypeInstallation());
+	                prixParHeure = ticket.getPrixParHeure(type);
 	            } else {
 	                continue;
 	            }
