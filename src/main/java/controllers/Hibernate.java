@@ -15,12 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import modeles.Myclub;
-import modeles.SABAH.Abonnement;
-import modeles.SABAH.Installation;
-import modeles.SABAH.Joueur;
-import modeles.SABAH.Reservation;
-
+import modeles.*;
+import modeles.SABAH.*;
 
 
 /**
@@ -134,6 +130,60 @@ public class Hibernate extends HttpServlet {
         	BigDecimal chiffreAffaire = club.totalChiffreAffaire();
         	request.setAttribute("chiffreAffaire", chiffreAffaire);
         	maVue = VUES + "chiffreAffaireResult.jsp"; 
+        	
+        }else if (action.equals("addJoueur")) {
+        	try {
+        		Myclub myclub = new Myclub();
+
+                // Retrieve and parse form data
+                String nom = request.getParameter("nom");
+                String prenom = request.getParameter("prenom");
+                String typeAbonnement = request.getParameter("typeAbonnement");
+                Integer clubId = Integer.parseInt(request.getParameter("clubId"));
+                
+                // Create a new joueur
+                Joueur joueur = new Joueur();
+                joueur.setNom(nom);
+                joueur.setPrenom(prenom);
+
+                // Associer le joueur au club
+                Club club = myclub.findClubById(clubId);
+                joueur.setClub(club);
+
+                // Sauvegarder le joueur avant l'abonnement
+                myclub.saveJoueur(joueur);
+
+                // create abonnement
+                Abonnement abonnement = new Abonnement();
+                abonnement.setTypeAbonnement(typeAbonnement);
+                abonnement.setJoueur(joueur); // Associer l'abonnement au joueur
+                // Sauvegarder l'abonnement après avoir associé le joueur
+                //myclub.saveAbonnement(abonnement);
+                
+                // create a new abonnement specifique
+                if (typeAbonnement.equals("Forfait")) {
+                	Forfait forfait = new Forfait();
+                	// definir le type
+                	forfait.setTypeAbonnement("Forfait");
+                	//associer le joueur a l'abonnement
+                	forfait.setJoueur(joueur);
+                	// sauvegarder l'abonnement
+                	myclub.saveAbonnement(forfait);
+                }else if (typeAbonnement.equals("Ticket")) {
+                	Ticket ticket = new Ticket();
+                	// definir le type
+                	ticket.setTypeAbonnement("Ticket");
+                	//associer le joueur a l'abonnement
+                	ticket.setJoueur(joueur);
+                	// sauvegarder l'abonnement
+                	myclub.saveAbonnement(ticket);
+                }
+                request.setAttribute("confirmationMessage", "Votre inscription a été enregistrée !");
+                maVue = VUES + "inscriptionConfirmation.jsp";
+				// TODO: handle exception
+			}catch (Exception e) {
+            	e.printStackTrace();
+            	}
         	
         }
         RequestDispatcher dispatcher = getServletContext()

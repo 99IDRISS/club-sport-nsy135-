@@ -29,6 +29,5 @@ public class Club {
 	public Set<Installation> getInstallations() {
 		return this.installations;
 	}
-	
 
 }

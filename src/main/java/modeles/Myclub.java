@@ -53,10 +53,12 @@ public class Myclub{
     
    }
    public  Joueur findJoueurById(Integer id) {
-//	   Joueur joueur;
-//	   joueur = session.get(Joueur.class, joueurId);
 	return (Joueur) session.load(Joueur.class, id);
    }
+   public  Club findClubById(Integer id) {
+	return (Club) session.load(Club.class, id);
+   }
+   
    
    public Installation findInstallationById(Integer installationId) {
 	    Installation installation = null;
@@ -135,7 +137,7 @@ public class Myclub{
 				//BigDecimal prixAnnuel = BigDecimal.valueOf(forfait.getPrixAnnuel());
 				BigDecimal prixAnnuel = forfait.getPrixAnnuel();
 				totalpaye = totalpaye.add(prixAnnuel.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP));
-			//calculate the cost of reservation the last month
+				//calculate the cost of reservation the last month
 				for (Reservation reservation : joueur.getReservations()) {
 					//check if the reservation in previous month
 					if (isReservationInPreviousMonth(reservation)) {
@@ -158,6 +160,7 @@ public class Myclub{
 				
 			}
 		}
+		
 		return totalpaye; 
 	}
    
@@ -205,8 +208,6 @@ public class Myclub{
 	    return chiffreAffaire;
 	}
 
-   
-	
 	private boolean isReservationInPreviousMonth(Reservation reservation) {
 		Calendar reservationDate= Calendar.getInstance();
 		reservationDate.setTime(reservation.getDateHeure());
@@ -251,7 +252,34 @@ public class Myclub{
 	        detailInstallations.add(details);
 		}
 		return detailInstallations;
-		
 	}
-  
+	
+	public void saveJoueur(Joueur joueur) {
+		Transaction transaction = null;
+        
+        try {
+            transaction = session.beginTransaction();
+            session.save(joueur);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } 
+    }
+	
+	public void saveAbonnement(Abonnement abonnement) {
+		Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.save(abonnement);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+	}
 }

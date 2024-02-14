@@ -50,6 +50,30 @@
     		<input type="submit" value="Calculer Paiement">
 		</form>
 		
+		<form action="${pageContext.request.contextPath}/hibernate?action=addJoueur" method="post">
+    		<h3>Inscrire un Joueur</h3>
+
+    		<label for="nom">Nom du Joueur:</label>
+		    <input type="text" id="nom" name="nom" required>
+		    
+		    <label for="prenom">Prénom du Joueur:</label>
+		    <input type="text" id="prenom" name="prenom" required><br><br>
+		
+		    <label for="typeAbonnement">Type Abonnement:</label>
+    		<select id="typeAbonnement" name="typeAbonnement" required>
+		        <option value="Forfait">Forfait</option>
+		        <option value="Ticket">Ticket</option>
+		    </select><br><br>
+		
+		    <label for="clubId">Club Id:</label>
+		    <select id="clubId" name="clubId" required>
+		        <option value="1">1</option>
+		        <option value="2">2</option>
+		    </select><br><br>
+		
+		    <input type="submit" value="Inscrire">
+		</form>
+		
 		<form action="${pageContext.request.contextPath}/hibernate?action=totalChiffreAffaire" method="post">
     		<input type="submit" value="Voir le chiffre d'affaire du dernier mois">
 		</form>

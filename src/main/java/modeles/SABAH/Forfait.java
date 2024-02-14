@@ -38,7 +38,7 @@ public class Forfait extends Abonnement{
 			case Badminton:
 				prixParHeure = new BigDecimal("10");
 				break;
-		default:
+			default:
 			prixParHeure = BigDecimal.ZERO;
 			break;
 		}

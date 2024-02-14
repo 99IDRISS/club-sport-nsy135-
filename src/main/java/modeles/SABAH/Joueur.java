@@ -43,6 +43,14 @@ public class Joueur {
 		return abonnement;
 	}
 	
+	@ManyToOne
+	@JoinColumn(name= "club_id")
+	private Club club ;
+	public void setClub(Club c) {
+		this.club = c;
+	}
+	public Club getClub() {
+		return club;
+	}
 	
-
 }
